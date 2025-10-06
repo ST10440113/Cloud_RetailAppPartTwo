@@ -7,11 +7,11 @@
 <h1>Products</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-link text-bg-dark border-light-subtle">Create</a>
+    <a asp-action="Create" class="btn btn-outline-light">+ New Product</a>
 </p>
 <form asp-controller="Products" asp-action="Index">
     <p>
-        <label>Title: <input type="text" name="SearchString" /></label>
+        <label>Product Name: <input type="text" name="SearchString" /></label>
         <input type="submit" value="Filter" />
     </p>
 </form>
@@ -20,7 +20,7 @@
         @foreach (var item in Model)
         {
             <div class="col-md-4 mb-4">
-                <div class="card">
+                <div class="card" style="width: 18rem;">
                     <div class="card-body">
                         <h5 class="card-title">@item.ProductName</h5>
 
