@@ -103,7 +103,7 @@ namespace Cloud_MVCRetailAppPartTwo.Controllers
             order.RowKey = Guid.NewGuid().ToString("N");
             order.OrderDate = DateTime.UtcNow;
 
-            var queueClient = new QueueClient(_configuration.GetConnectionString("connection"), "queue-items");
+            var queueClient = new QueueClient(_configuration.GetConnectionString("connection"), "orders");
             await queueClient.CreateIfNotExistsAsync();
             string orderJson = JsonSerializer.Serialize(order);
             await queueClient.SendMessageAsync(Convert.ToBase64String(Encoding.UTF8.GetBytes(orderJson)));
