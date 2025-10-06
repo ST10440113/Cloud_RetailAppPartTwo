@@ -5,6 +5,10 @@ VisualStudioVersion = 17.14.36408.4 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloud_RetailAppPartTwo", "Cloud_RetailAppPartTwo\Cloud_RetailAppPartTwo.csproj", "{6FBDB252-3C79-4736-BE79-78C5C9CBC2F1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueueFunction", "QueueFunction\QueueFunction.csproj", "{7A1D21CA-8659-46A4-941B-2B72262A0ED6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloud_MVCRetailAppPartTwo", "Cloud_MVCRetailAppPartTwo\Cloud_MVCRetailAppPartTwo.csproj", "{41DD5E04-36EF-4D05-BC0D-9D9CBC0CFFC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{6FBDB252-3C79-4736-BE79-78C5C9CBC2F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FBDB252-3C79-4736-BE79-78C5C9CBC2F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FBDB252-3C79-4736-BE79-78C5C9CBC2F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A1D21CA-8659-46A4-941B-2B72262A0ED6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A1D21CA-8659-46A4-941B-2B72262A0ED6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A1D21CA-8659-46A4-941B-2B72262A0ED6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A1D21CA-8659-46A4-941B-2B72262A0ED6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41DD5E04-36EF-4D05-BC0D-9D9CBC0CFFC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41DD5E04-36EF-4D05-BC0D-9D9CBC0CFFC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41DD5E04-36EF-4D05-BC0D-9D9CBC0CFFC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41DD5E04-36EF-4D05-BC0D-9D9CBC0CFFC7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

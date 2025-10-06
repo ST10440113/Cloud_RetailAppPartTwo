@@ -7,6 +7,7 @@ using Azure.Storage.Queues.Models;
 using System.Text.Json;
 using Microsoft.Azure.Functions.Worker.Http;
 using System.Net;
+using Cloud_MVCRetailAppPartTwo.Models;
 
 
 namespace Cloud_RetailAppPartTwo;
@@ -29,28 +30,28 @@ public class Table_Function
     }
 
 
-    //[Function("AddCustomerFunction")]
-    //public async Task AddCustomer([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
-    //{
-    //    _tableClient.CreateIfNotExists();
+    [Function("AddCustomerFunction")]
+    public async Task AddCustomer([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+    {
+        _tableClient.CreateIfNotExists();
 
-    //    using var reader = new StreamReader(req.Body);
-    //    var body = await reader.ReadToEndAsync();
+        using var reader = new StreamReader(req.Body);
+        var body = await reader.ReadToEndAsync();
 
-    //    var customer = JsonSerializer.Deserialize<Customer>(body);
+        var customer = JsonSerializer.Deserialize<Customer>(body);
 
-    //    if (customer == null)
-    //    {
-    //        _logger.LogError("Invalid customer data");
-    //        return;
-    //    }
-    //    customer.PartitionKey = "CUSTOMER";
-    //    customer.RowKey = Guid.NewGuid().ToString();
-    //    await _tableClient.AddEntityAsync(customer);
+        if (customer == null)
+        {
+            _logger.LogError("Invalid customer data");
+            return;
+        }
+        customer.PartitionKey = "CUSTOMER";
+        customer.RowKey = Guid.NewGuid().ToString();
+        await _tableClient.AddEntityAsync(customer);
 
-    //    _logger.LogInformation("Successfully saved customer to Customer Table");
+        _logger.LogInformation("Successfully saved customer to Customer Table");
 
-    //}
+    }
 
 
 }
