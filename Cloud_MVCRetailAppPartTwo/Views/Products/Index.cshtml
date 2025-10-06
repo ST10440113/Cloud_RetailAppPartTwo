@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Cloud_MVCRetailAppPartTwo.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Products</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-link text-bg-dark border-light-subtle">Create</a>
+</p>
+<form asp-controller="Products" asp-action="Index">
+    <p>
+        <label>Title: <input type="text" name="SearchString" /></label>
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+<div class="container mt-3">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.ProductName</h5>
+
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <img src="@item.ImageUrl" alt="Product Image" style="width:100%;height:auto;" />
+                        }
+                        else
+                        {
+                            <p>No image available</p>
+                        }
+                        <p class="card-text">Description: @item.Description</p>
+                        <p class="card-text">Product Price: @item.Price</p>
+                        <p class="card-text">Stock Quantity: @item.StockQuantity</p>
+
+
+                        <form asp-action="Delete" method="post" style="display:inline;">
+                            <input type="hidden" name="partitionKey" value="@item.PartitionKey" />
+                            <input type="hidden" name="rowKey" value="@item.RowKey" />
+                            <button type="submit" class="btn btn-link text-bg-dark border-light-subtle" onclick="return confirm ('Are you sure you want to delete this product?');">Delete</button>
+                        </form>
+
+                        <form asp-action="Edit" method="get" style="display:inline;">
+                            <input type="hidden" name="partitionKey" value="@item.PartitionKey" />
+                            <input type="hidden" name="rowKey" value="@item.RowKey" />
+                            <button type="submit" class="btn btn-link text-bg-dark border-light-subtle">Edit</button>
+                        </form>
+
+
+                        <form asp-action="Details" method="post" style="display:inline;">
+                            <input type="hidden" name="partitionKey" value="@item.PartitionKey" />
+                            <input type="hidden" name="rowKey" value="@item.RowKey" />
+                            <button type="submit" class="btn btn-link  text-bg-dark border-light-subtle">Details</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
