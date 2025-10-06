@@ -1,3 +1,4 @@
+using Cloud_MVCRetailAppPartTwo.Services;
 using Microsoft.Extensions.Configuration;
 
 namespace Cloud_MVCRetailAppPartTwo
@@ -7,36 +8,39 @@ namespace Cloud_MVCRetailAppPartTwo
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var configuration = builder.Configuration;
 
-            //// Add services to the container.
-            //builder.Services.AddControllersWithViews();
-            ////register tableStorage with configuration
-            //builder.Services.AddSingleton(new TableService(configuration.GetConnectionString("connection")));
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddHttpClient();
 
-            ////register blobStorage with configuration
-            //builder.Services.AddSingleton(new BlobService(configuration.GetConnectionString("connection")));
+            //register tableStorage with configuration
+            builder.Services.AddSingleton(new TableService(configuration.GetConnectionString("connection")));
 
-            ////register queueStorage with configuration
-            //builder.Services.AddSingleton<QueueService>(sp =>
-            //{
-            //    var connectionString = configuration.GetConnectionString("connection");
-            //    return new QueueService(connectionString, "orders");
-            //}
+            //register blobStorage with configuration
+            builder.Services.AddSingleton(new BlobService(configuration.GetConnectionString("connection")));
 
-            //);
+            //register queueStorage with configuration
+            builder.Services.AddSingleton<QueueService>(sp =>
+            {
+                var connectionString = configuration.GetConnectionString("connection");
+                return new QueueService(connectionString, "orders");
+            }
 
-            ////register fileStorage with configuration
-            //builder.Services.AddHttpClient();
+            );
 
-            //builder.Services.AddSingleton<FileService>(sp =>
-            //{
-            //    var configuration = sp.GetRequiredService<IConfiguration>();
-            //    var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
-            //    var connectionString = configuration.GetConnectionString("connection");
-            //    var fileShareName = "files";
+            //register fileStorage with configuration
+            builder.Services.AddHttpClient();
 
-            //    return new FileService(connectionString, fileShareName, httpClientFactory, configuration);
-            //});
+            builder.Services.AddSingleton<FileService>(sp =>
+            {
+                var configuration = sp.GetRequiredService<IConfiguration>();
+                var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
+                var connectionString = configuration.GetConnectionString("connection");
+                var fileShareName = "files";
+
+                return new FileService(connectionString, fileShareName, httpClientFactory, configuration);
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
