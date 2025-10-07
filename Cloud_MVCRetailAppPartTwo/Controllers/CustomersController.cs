@@ -44,34 +44,22 @@ namespace Cloud_MVCRetailAppPartTwo.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([Bind("CustomerId,FirstName,LastName,Email,PhoneNumber,Address")] Customer customer)
         {
-            var httpClient = _httpClientFactory.CreateClient();
-            var apiBaseUrl = _configuration["FunctionApi:BaseUrl"];
-
             customer.CustomerId = customer.GetHashCode();
             customer.PartitionKey = "CUSTOMER";
             customer.RowKey = Guid.NewGuid().ToString("N");
 
+            // Call service method
+            var response = await _svc.AddCustomerAsync(customer);
+
+            if (response.IsSuccessStatusCode)
             {
-                var customerJson = new StringContent(
-                    JsonSerializer.Serialize(customer),
-                    Encoding.UTF8,
-                    Application.Json);
-
-
-                var httpResponseMessage = await httpClient.PostAsync($"{apiBaseUrl}AddCustomerFunction", customerJson);
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    var errorContent = await httpResponseMessage.Content.ReadAsStringAsync();
-                    ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-                    return View(customer);
-                }
-
-
-
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                ModelState.AddModelError(string.Empty, $"Server error: {errorContent}");
+                return View(customer);
             }
         }
 

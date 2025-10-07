@@ -1,5 +1,6 @@
 using Cloud_MVCRetailAppPartTwo.Services;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Cloud_MVCRetailAppPartTwo
 {
@@ -15,16 +16,32 @@ namespace Cloud_MVCRetailAppPartTwo
             builder.Services.AddHttpClient();
 
             //register tableStorage with configuration
-            builder.Services.AddSingleton(new TableService(configuration.GetConnectionString("connection")));
+            builder.Services.AddSingleton<TableService>(sp =>
+            {
+                var configuration = sp.GetRequiredService<IConfiguration>();
+                var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
+                var connectionString = configuration.GetConnectionString("connection");
+                return new TableService(connectionString, httpClientFactory, configuration);
+            });
 
             //register blobStorage with configuration
-            builder.Services.AddSingleton(new BlobService(configuration.GetConnectionString("connection")));
+            builder.Services.AddSingleton<BlobService>(sp =>
+            {
+                var configuration = sp.GetRequiredService<IConfiguration>();
+                var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
+                var connectionString = configuration.GetConnectionString("connection");
+                var containerName = "product-images";
+                return new BlobService(httpClientFactory, configuration, connectionString, containerName);
+            });
 
             //register queueStorage with configuration
             builder.Services.AddSingleton<QueueService>(sp =>
             {
+                var configuration = sp.GetRequiredService<IConfiguration>(); 
+                var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
                 var connectionString = configuration.GetConnectionString("connection");
-                return new QueueService(connectionString, "orders");
+                var queueName = "orders";
+                return new QueueService(httpClientFactory, configuration , connectionString, queueName);
             }
 
             );

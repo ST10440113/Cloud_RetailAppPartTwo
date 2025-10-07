@@ -23,7 +23,7 @@ public class File_Function
 
         try
         {
-            string connectionString = Environment.GetEnvironmentVariable("connection");
+            string connectionString = "";
             string shareName = "files";
             string directoryName = "directory";
 

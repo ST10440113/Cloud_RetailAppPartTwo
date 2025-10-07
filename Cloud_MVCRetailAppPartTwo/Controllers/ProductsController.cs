@@ -49,35 +49,27 @@ namespace Cloud_MVCRetailAppPartTwo.Controllers
 
         // POST: Products/Create       
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,Description,Price,StockQuantity")] IFormFile file, Product product)
+        public async Task<IActionResult> Create(Product product, IFormFile file)
         {
-
-            var httpClient = _httpClientFactory.CreateClient();
-            var apiBaseUrl = _configuration["BlobFunctionApi:BaseUrl"];
-            using var formData = new MultipartFormDataContent();
-            formData.Add(new StringContent(product.ProductName), "ProductName");
-            formData.Add(new StringContent(product.Description), "Description");
-            formData.Add(new StringContent(product.Price), "Price");
-            formData.Add(new StringContent(product.StockQuantity.ToString()), "StockQuantity");
-
-            if (file != null && file.Length > 0)
+            if (file == null || file.Length == 0)
             {
-                formData.Add(new StreamContent(file.OpenReadStream()), "ImageUrl", file.FileName);
+                ModelState.AddModelError("", "Please select a file");
+                return View(product);
             }
-            var httpResponseMessage = await httpClient.PostAsync($"{apiBaseUrl}products", formData);
-            if (httpResponseMessage.IsSuccessStatusCode)
+
+            var response = await _blobService.UploadAsync(file, product);
+
+            if (response.IsSuccessStatusCode)
             {
                 TempData["SuccessMessage"] = "Product created successfully!";
                 return RedirectToAction(nameof(Index));
             }
             else
             {
-                var statusCode = httpResponseMessage.StatusCode;
-                var errorContent = await httpResponseMessage.Content.ReadAsStringAsync();
-                ModelState.AddModelError(string.Empty, $"API Error: {statusCode} - {errorContent}");
+                var errorContent = await response.Content.ReadAsStringAsync();
+                ModelState.AddModelError("", $"API Error: {response.StatusCode} - {errorContent}");
                 return View(product);
             }
-
         }
 
 

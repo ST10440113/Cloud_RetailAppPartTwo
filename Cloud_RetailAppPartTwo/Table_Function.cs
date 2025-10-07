@@ -21,7 +21,7 @@ public class Table_Function
     public Table_Function(ILogger<Table_Function> logger)
     {
         _logger = logger;
-        _storageConnectionString = Environment.GetEnvironmentVariable("connection");
+        _storageConnectionString = "";
         var serviceClient = new TableServiceClient(_storageConnectionString);
         _tableClient = serviceClient.GetTableClient("Customers");
 
@@ -31,7 +31,7 @@ public class Table_Function
 
 
     [Function("AddCustomerFunction")]
-    public async Task AddCustomer([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+    public async Task AddCustomer([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
     {
         _tableClient.CreateIfNotExists();
 

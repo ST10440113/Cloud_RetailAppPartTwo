@@ -19,7 +19,7 @@ public class Queue_Function
     public Queue_Function(ILogger<Queue_Function> logger)
     {
         _logger = logger;
-        _storageConnectionString = Environment.GetEnvironmentVariable("connection");
+        _storageConnectionString = ""; 
         var serviceClient = new TableServiceClient(_storageConnectionString);
         _tableClient = serviceClient.GetTableClient("Orders");
     }
@@ -33,7 +33,7 @@ public class Queue_Function
         //create table if it does not exist
         await _tableClient.CreateIfNotExistsAsync();
 
-        // desrialize the JSON string into an Order object
+        
         var order = JsonSerializer.Deserialize<Order>(message.MessageText);
         if (order == null)
         {

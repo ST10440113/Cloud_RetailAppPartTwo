@@ -2,6 +2,9 @@
 using Azure.Data.Tables;
 using Azure.Storage.Blobs;
 using Cloud_MVCRetailAppPartTwo.Models;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 
 namespace Cloud_MVCRetailAppPartTwo.Services
 {
@@ -11,13 +14,18 @@ namespace Cloud_MVCRetailAppPartTwo.Services
         private readonly TableClient _Ptable;
         private readonly TableClient _Otable;
         private readonly BlobServiceClient _blobServiceClient;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
 
 
-        public TableService(string connection)
+        public TableService(string connection, IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _table = new TableClient(connection, "Customers");
             _Ptable = new TableClient(connection, "Products");
             _Otable = new TableClient(connection, "Orders");
+            _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
+           
 
 
         }
@@ -35,10 +43,16 @@ namespace Cloud_MVCRetailAppPartTwo.Services
         }
 
 
-        public async Task AddCustomerAsync(Customer c)
+        public async Task<HttpResponseMessage> AddCustomerAsync(Customer customer)
         {
-            await _table.AddEntityAsync(c);
+            var httpClient = _httpClientFactory.CreateClient();
+            var apiBaseUrl = _configuration["FunctionApi:BaseUrl"]; 
+
+            
+            var customerJson = new StringContent(JsonSerializer.Serialize(customer),Encoding.UTF8,"application/json");
+            return await httpClient.PostAsync($"{apiBaseUrl}AddCustomerFunction", customerJson);
         }
+
 
 
         public async Task<Customer?> GetCustomerAsync(string partitionKey, string rowKey)
